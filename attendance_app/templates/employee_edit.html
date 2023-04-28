@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid px-4">
+        <h2 class="mt-2">Update Employee <a style="float:right" href="/dashboard/employee-list/" class="btn btn-success">Employee List</a></h2>
+        <form method="POST">
+            {% csrf_token %}
+            <table class="table table-bordered table-striped table-hover">
+                <tr>
+                    <th>First Name</th>
+                    <td><input type="text" name="first_name" value="{{get_employee.first_name}}" class="form-control"></td>
+                    <th>Last Name</th>
+                    <td><input type="text" name="last_name" value="{{get_employee.last_name}}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <th>Father's Name</th>
+                    <td><input type="text" name="father_name" value="{{get_employee.father_name}}" class="form-control"></td>
+                    <th>Mother's Name</th>
+                    <td><input type="text" name="mother_name" value="{{get_employee.mother_name}}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <th>Mobile</th>
+                    <td><input type="text" name="mobile" value="{{get_employee.mobile}}" class="form-control"></td>
+                    <th>Email</th>
+                    <td><input type="email" name="email" value="{{get_employee.email}}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <th>Department</th>
+                    <td>
+                        <select name="department" class="form-control">
+                            <option value="">Select Department</option>
+                            {% for data in department %}
+                                {% if data.pk == get_employee.department_id %}
+                                    <option value="{{data.id}}" selected>{{data.department}}</option>
+                                {% else %}
+                                    <option value="{{data.id}}">{{data.department}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <th>Designation</th>
+                    <td>
+                        <select name="designation" class="form-control">
+                            <option value="">Select Designation</option>
+                            {% for data in designation %}
+                                {% if data.pk == get_employee.designation_id %}
+                                    <option value="{{data.id}}" selected>{{data.designation}}</option>
+                                {% else %}
+                                    <option value="{{data.id}}">{{data.designation}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+            
+                <tr>
+                    <th>Gender</th>
+                    <td><input type="text" name="gender" value="{{get_employee.gender}}" class="form-control"></td>
+                    <th>Date of Birth</th>
+                    <td><input type="date" name="date_of_birth" value="{{get_employee.date_of_birth|date:'Y-m-d'}}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <th>Date of Join</th>
+                    <td> 
+                        <input type="date" name="joining_date" value="{{get_employee.joining_date|date:'Y-m-d'}}" class="form-control">
+                    </td>
+                    <th>Religion</th>
+                    <td><input type="text" name="religion" value="{{get_employee.religion}}" class="form-control"></td> 
+                </tr>
+                <tr>
+                    <th>NID</th>
+                    <td><input type="text" name="nid" value="{{get_employee.nid}}" class="form-control"></td>
+                    <th>Nationality</th>
+                    <td><input type="text" name="nationality" value="{{get_employee.nationality}}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <th>Present Address</th>
+                    <td><textarea name="present_address" class="form-control" rows="2">{{get_employee.present_address}}</textarea></td>
+                     
+                    <th>Permanent Address</th>
+                    <td><textarea name="permanent_address" class="form-control" rows="2">{{get_employee.permanent_address}}</textarea></td> 
+                </tr>
+                <tr>
+                    <th>Branch</th>
+                    <td>
+                        <select name="branch_id" class="form-control">
+                            <option value="">Select Branch</option>
+                            {% for data in branch %}
+                                {% if data.pk == get_employee.branch_id %}
+                                    <option value="{{data.id}}" selected>{{data.branch_name}}</option>
+                                {% else %}
+                                    <option value="{{data.id}}">{{data.branch_name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <th> </th>
+                    <td><input type="submit" value="Update Employee" class="btn btn-primary"></td> 
+                </tr>
+            </table> 
+        </form>
+    </div>
+
+{% endblock %}

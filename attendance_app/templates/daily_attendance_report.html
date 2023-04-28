@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid px-4">
+    <h3 class="mt-2"> Daily Attendance Report  </h3> <hr>
+    <form method="POST">{% csrf_token %}
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label><strong>Attendance Date</strong></label>
+                    <input type="date" class="form-control" name="attendance_date" value="{% now 'Y-m-d' %}">
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label><strong>Department</strong></label>
+                    <select name="department" class="form-control">
+                        <option value="">Select Department</option>
+                        {% for data in department %}
+                            <option value="{{data.id}}">{{data.department}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label><strong>Department</strong></label>
+                    <select name="attendance_status" class="form-control"> 
+                        <option value="">Select Status</option>
+                        <option value="absent">Absent</option>
+                        <option value="present">Present</option>
+                        <option value="late present">Late Present</option>
+                        <option value="leave">Leave</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <button style="margin-top: 23px;" type="submit" class="btn btn-success">Search</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% if attendance_list %}
+    <div class="row">
+        <table class="table table-striped table-hover" style="margin-top: 20px;">
+            <tr>
+                <th>SL</th>
+                <th>Employee Name</th>
+                <th>Employee Id</th>  
+                <th>Attendance Date</th>
+                <th>Shift In</th>
+                <th>Shift Out</th>
+                <th>In Time</th>
+                <th>Out Time</th>
+                <th>Status</th>
+            </tr>
+            {% for data in attendance_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ data.employee}}</td>
+                <td>{{ data.employee.employee_id}}</td>
+                <td>{{ data.att_date|date:"d-M-Y" }}</td>
+                <td>{{ data.shift_in_time }}</td>
+                <td>{{ data.shift_out_time }}</td>
+                <td>{{ data.in_time }}</td>
+                <td>{{ data.out_time }}</td>
+                <td>{{ data.atten_status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+     
+</div>
+
+{% endblock %}

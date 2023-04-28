@@ -11,4 +11,5 @@ urlpatterns = [
     path("dashboard/employee/<int:id>/deleteEmployee/", views.deleteEmployee, name="deleteEmployee"),
     path("dashboard/dailyAttendance/", views.dailyAttendance, name="dailyAttendance"),
     path("dashboard/AttendanceReport/", views.AttendanceReport, name="AttendanceReport"),
+    path("dashboard/ExportEmployee/", views.ExportEmployee, name="ExportEmployee"),
 ]

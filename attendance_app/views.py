@@ -3,8 +3,22 @@ from . import models
 from django.contrib import messages
 from attendance_app.decorator import employeeLogin
 import pandas as pd  
-import hashlib
+import os, hashlib,xlsxwriter, io 
 from django.core.paginator import Paginator
+from django.conf import settings 
+from django.http import HttpResponse, HttpRequest 
+from django.utils import timezone
+
+from django.http import  Http404
+def download_excel_sheet(file_name):
+    file_path = os.path.join(settings.MEDIA_ROOT+'/excel_templates/', file_name)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            return response
+    raise Http404  
+
 
 #---------------- Employee Login--------------------------------#
 def loginPage(request):
@@ -283,8 +297,54 @@ def AttendanceReport(request):
         return render(request, 'daily_attendance_report.html', context)
 
 
-         
+@employeeLogin
+def ExportEmployee(request):  
+    employee_list = models.EmployeeList.objects.filter(status=True).order_by('id')
+    if employee_list: 
+        if not os.path.exists(settings.MEDIA_ROOT+'/excel_templates/'):
+            os.mkdir(settings.MEDIA_ROOT+'/excel_templates/')
 
+        file_name = "employee_list.xlsx"
+        file_path = os.path.join(settings.MEDIA_ROOT+'/excel_templates/',file_name)
+        if os.path.isfile(settings.MEDIA_ROOT+'/excel_templates/'+file_name):
+            os.remove(settings.MEDIA_ROOT+'/excel_templates/'+file_name)
+
+        if not os.path.exists(file_path):
+            workbook  = xlsxwriter.Workbook(settings.MEDIA_ROOT+'/excel_templates/'+file_name)
+            worksheet = workbook.add_worksheet()
+
+            worksheet.write('A1','Employee Name') 
+            worksheet.write('B1','Employee Id') 
+            worksheet.write('C1','Department') 
+            worksheet.write('D1','Designation')    
+            worksheet.write('E1','Mobile')    
+            worksheet.write('F1','email')    
+                     
+            worksheet.set_column('A:A', 15)
+            worksheet.set_column('B:B', 15) 
+            worksheet.set_column('C:C', 25) 
+            worksheet.set_column('D:D', 15)  
+            worksheet.set_column('E:E', 15)  
+            worksheet.set_column('F:F', 15)     
+                
+            count = 2 
+            for i in employee_list:   
+                worksheet.write('A'+str(count), str(i.first_name))
+                worksheet.write('B'+str(count), str(i.employee_id))
+                worksheet.write('C'+str(count), str(i.department.department)) 
+                worksheet.write('D'+str(count), str(i.designation.designation)) 
+                worksheet.write('E'+str(count), str(i.mobile)) 
+                worksheet.write('F'+str(count), str(i.email))  
+                count +=1
+         
+            workbook.close()
+            return download_excel_sheet(file_name)
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+
+         
+# Import employee from excel 
 @employeeLogin
 def impoerEmployeeFromExcel(request):
     xl = pd.read_excel("attendance_app/employee_list.xlsx", "Sheet1")

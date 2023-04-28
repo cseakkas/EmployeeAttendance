@@ -19,3 +19,6 @@ Password: admin123
 link: http://127.0.0.1:8000/adminlogin/
 employee_id : 1100005
 password : 1100005
+
+
+#### Database included in mysql_database folder

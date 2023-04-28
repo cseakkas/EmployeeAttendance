@@ -1,3 +1,5 @@
 # Employee Attendance
 This is employee attendance Project
-## programming Language: Python
+### Programming Language: Python (Django)
+### Database : Mysql
+### Front-End : HTML, CSS, Javascript, Bootstrap
